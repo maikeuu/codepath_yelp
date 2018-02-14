@@ -67,9 +67,11 @@ class BusinessCell: UITableViewCell {
         return imageView
     }()
     
+    var cellRow: Int?
+    
     var business: Business! {
         didSet {
-            nameLabel.text = business.name
+            nameLabel.text = "\(cellRow!). " + business.name!
             reviewsCountLabel.text = "\(business.reviewCount!) Reviews"
             addressLabel.text = business.address
             categoriesLabel.text = business.categories
@@ -89,36 +91,74 @@ class BusinessCell: UITableViewCell {
         let margins = contentView.layoutMarginsGuide
         
         //thumbImage
-        setConstraints(thumbImageView, leadingAnchor: margins.leadingAnchor, leadingConstant: 8, topAnchor: margins.topAnchor, topConstant: 8, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: nil, bottomConstant: 0, widthConstant: 65, heightConstant: 65)
+        setConstraints(thumbImageView,
+                       leadingAnchor: margins.leadingAnchor, leadingConstant: 4,
+                       topAnchor: margins.topAnchor, topConstant: 8,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 65, heightConstant: 65)
         //nameLabel
-        setConstraints(nameLabel, leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8, topAnchor: margins.topAnchor, topConstant: 8, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
+        setConstraints(nameLabel,
+                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
+                       topAnchor: margins.topAnchor, topConstant: 8,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 0, heightConstant: 0)
         //ratingImage
-        setConstraints(ratingImageView, leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8, topAnchor: nameLabel.bottomAnchor, topConstant: 4, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: nil, bottomConstant: 0, widthConstant: 83, heightConstant: 15)
+        setConstraints(ratingImageView,
+                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
+                       topAnchor: nameLabel.bottomAnchor, topConstant: 4,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 83, heightConstant: 15)
         //addressLabel
-        setConstraints(addressLabel, leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8, topAnchor: ratingImageView.bottomAnchor, topConstant: 4, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
+        setConstraints(addressLabel,
+                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
+                       topAnchor: ratingImageView.bottomAnchor, topConstant: 4,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 0, heightConstant: 0)
         //reviewsCountLabel
-        setConstraints(reviewsCountLabel, leadingAnchor: ratingImageView.trailingAnchor, leadingConstant: 15, topAnchor: nil, topConstant: 0, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: addressLabel.topAnchor, bottomConstant: -3, widthConstant: 0, heightConstant: 0)
+        setConstraints(reviewsCountLabel,
+                       leadingAnchor: ratingImageView.trailingAnchor, leadingConstant: 15,
+                       topAnchor: nil, topConstant: 0,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: addressLabel.topAnchor, bottomConstant: -3,
+                       widthConstant: 0, heightConstant: 0)
         reviewsCountLabel.centerXAnchor.constraint(equalTo: ratingImageView.centerXAnchor)
         //categoriesLabel
-        setConstraints(categoriesLabel, leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8, topAnchor: addressLabel.bottomAnchor, topConstant: 2, trailingAnchor: nil, trailingConstant: 0, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
-        categoriesLabel.bottomAnchor.constraint(greaterThanOrEqualTo: margins.bottomAnchor, constant: 12)
+        setConstraints(categoriesLabel,
+                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
+                       topAnchor: addressLabel.bottomAnchor, topConstant: 2,
+                       trailingAnchor: nil, trailingConstant: 0,
+                       bottomAnchor: margins.bottomAnchor, bottomConstant: 0,
+                       widthConstant: 0, heightConstant: 0)
         //distanceLabel
-        setConstraints(distanceLabel, leadingAnchor: nameLabel.trailingAnchor, leadingConstant: 4, topAnchor: margins.topAnchor, topConstant: 8, trailingAnchor: margins.trailingAnchor, trailingConstant: 4, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
+        setConstraints(distanceLabel,
+                       leadingAnchor: nil, leadingConstant: 0,
+                       topAnchor: margins.topAnchor, topConstant: 8,
+                       trailingAnchor: margins.trailingAnchor, trailingConstant: 4,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 0, heightConstant: 0)
         distanceLabel.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor)
         //priceLabel
-        setConstraints(priceLabel, leadingAnchor: nil, leadingConstant: 0, topAnchor: distanceLabel.bottomAnchor, topConstant: 8, trailingAnchor: margins.trailingAnchor, trailingConstant: 4, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
+        setConstraints(priceLabel,
+                       leadingAnchor: nil, leadingConstant: 0,
+                       topAnchor: distanceLabel.bottomAnchor, topConstant: 8,
+                       trailingAnchor: margins.trailingAnchor, trailingConstant: 4,
+                       bottomAnchor: nil, bottomConstant: 0,
+                       widthConstant: 0, heightConstant: 0)
     }
     
-    func setConstraints(_ view: UIView, leadingAnchor: NSLayoutXAxisAnchor? = nil,
-                        leadingConstant: CGFloat = 0, topAnchor: NSLayoutYAxisAnchor? = nil,
-                        topConstant: CGFloat, trailingAnchor: NSLayoutXAxisAnchor? = nil,
-                        trailingConstant: CGFloat = 0, bottomAnchor: NSLayoutYAxisAnchor? = nil,
-                        bottomConstant: CGFloat = 0, widthConstant: CGFloat = 0,
-                        heightConstant: CGFloat = 0) {
+    func setConstraints(_ view: UIView,
+                        leadingAnchor: NSLayoutXAxisAnchor? = nil, leadingConstant: CGFloat = 0,
+                        topAnchor: NSLayoutYAxisAnchor? = nil, topConstant: CGFloat,
+                        trailingAnchor: NSLayoutXAxisAnchor? = nil, trailingConstant: CGFloat = 0,
+                        bottomAnchor: NSLayoutYAxisAnchor? = nil, bottomConstant: CGFloat = 0,
+                        widthConstant: CGFloat = 0, heightConstant: CGFloat = 0) {
         
         contentView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         if heightConstant > 0 {
             view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
         }
