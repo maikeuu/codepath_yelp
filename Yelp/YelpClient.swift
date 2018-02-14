@@ -51,7 +51,9 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
         
         // Default the location to San Francisco
-        var parameters: [String : AnyObject] = ["term": term as AnyObject, "ll": "37.785771,-122.406165" as AnyObject]
+        var parameters: [String : AnyObject] = ["term": term as AnyObject, "ll": "37.785771,-122.406165" as AnyObject,
+                                                "radius": 40000 as AnyObject, "limit": 25 as AnyObject, "offset": 6 as AnyObject]
+        
 
         
         if sort != nil {
@@ -66,7 +68,6 @@ class YelpClient: BDBOAuth1RequestOperationManager {
             parameters["deals_filter"] = deals! as AnyObject?
         }
         
-//        print(parameters)
         
         return self.get("search", parameters: parameters,
                         success: { (operation: AFHTTPRequestOperation, response: Any) -> Void in

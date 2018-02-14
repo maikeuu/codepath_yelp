@@ -9,8 +9,6 @@
 import UIKit
 
 class BusinessCell: UITableViewCell {
-    
-    
     //UI Properties
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -88,97 +86,33 @@ class BusinessCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        let margins = contentView.layoutMarginsGuide
-        
-        //thumbImage
-        setConstraints(thumbImageView,
-                       leadingAnchor: margins.leadingAnchor, leadingConstant: 4,
-                       topAnchor: margins.topAnchor, topConstant: 8,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 65, heightConstant: 65)
-        //nameLabel
-        setConstraints(nameLabel,
-                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
-                       topAnchor: margins.topAnchor, topConstant: 8,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 0, heightConstant: 0)
-        //ratingImage
-        setConstraints(ratingImageView,
-                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
-                       topAnchor: nameLabel.bottomAnchor, topConstant: 4,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 83, heightConstant: 15)
-        //addressLabel
-        setConstraints(addressLabel,
-                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
-                       topAnchor: ratingImageView.bottomAnchor, topConstant: 4,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 0, heightConstant: 0)
-        //reviewsCountLabel
-        setConstraints(reviewsCountLabel,
-                       leadingAnchor: ratingImageView.trailingAnchor, leadingConstant: 15,
-                       topAnchor: nil, topConstant: 0,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: addressLabel.topAnchor, bottomConstant: -3,
-                       widthConstant: 0, heightConstant: 0)
-        reviewsCountLabel.centerXAnchor.constraint(equalTo: ratingImageView.centerXAnchor)
-        //categoriesLabel
-        setConstraints(categoriesLabel,
-                       leadingAnchor: thumbImageView.trailingAnchor, leadingConstant: 8,
-                       topAnchor: addressLabel.bottomAnchor, topConstant: 2,
-                       trailingAnchor: nil, trailingConstant: 0,
-                       bottomAnchor: margins.bottomAnchor, bottomConstant: 0,
-                       widthConstant: 0, heightConstant: 0)
-        //distanceLabel
-        setConstraints(distanceLabel,
-                       leadingAnchor: nil, leadingConstant: 0,
-                       topAnchor: margins.topAnchor, topConstant: 8,
-                       trailingAnchor: margins.trailingAnchor, trailingConstant: 4,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 0, heightConstant: 0)
-        distanceLabel.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor)
-        //priceLabel
-        setConstraints(priceLabel,
-                       leadingAnchor: nil, leadingConstant: 0,
-                       topAnchor: distanceLabel.bottomAnchor, topConstant: 8,
-                       trailingAnchor: margins.trailingAnchor, trailingConstant: 4,
-                       bottomAnchor: nil, bottomConstant: 0,
-                       widthConstant: 0, heightConstant: 0)
+        //add views to cell's contentView
+        [nameLabel, reviewsCountLabel, addressLabel, categoriesLabel, thumbImageView, ratingImageView,
+         distanceLabel, priceLabel].forEach{contentView.addSubview($0)}
+        //sets up constraints for the views of the cell
+        setUpCell()
     }
     
-    func setConstraints(_ view: UIView,
-                        leadingAnchor: NSLayoutXAxisAnchor? = nil, leadingConstant: CGFloat = 0,
-                        topAnchor: NSLayoutYAxisAnchor? = nil, topConstant: CGFloat,
-                        trailingAnchor: NSLayoutXAxisAnchor? = nil, trailingConstant: CGFloat = 0,
-                        bottomAnchor: NSLayoutYAxisAnchor? = nil, bottomConstant: CGFloat = 0,
-                        widthConstant: CGFloat = 0, heightConstant: CGFloat = 0) {
+    private func setUpCell() {
+        let margins = contentView.layoutMarginsGuide
+        thumbImageView.anchor(top: margins.topAnchor, leading: margins.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 8, left: 4, bottom: 0, right: 0), size: .init(width: 65, height: 65))
         
-        contentView.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        if heightConstant > 0 {
-            view.heightAnchor.constraint(equalToConstant: heightConstant).isActive = true
-        }
-        if widthConstant > 0 {
-            view.widthAnchor.constraint(equalToConstant: widthConstant).isActive = true
-        }
-        if let leadingAnchor = leadingAnchor {
-            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingConstant).isActive = true
-        }
-        if let topAnchor = topAnchor {
-            view.topAnchor.constraint(equalTo: topAnchor
-                , constant: topConstant).isActive = true
-        }
-        if let trailingAnchor = trailingAnchor {
-            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailingConstant).isActive = true
-        }
-        if let bottomAnchor = bottomAnchor {
-            view.bottomAnchor.constraint(equalTo: bottomAnchor
-                , constant: bottomConstant).isActive = true
-        }
+        nameLabel.anchor(top: margins.topAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 8, left: 8, bottom: 0, right: 0))
+        nameLabel.numberOfLines = 0
+        
+        ratingImageView.anchor(top: nameLabel.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 8, bottom: 0, right: 0), size: .init(width: 83, height: 15))
+        
+        addressLabel.anchor(top: ratingImageView.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 8, bottom: 0, right: 0))
+        
+        reviewsCountLabel.anchor(top: nil, leading: ratingImageView.trailingAnchor, bottom: addressLabel.topAnchor, trailing: nil, padding: .init(top: 0, left: 15, bottom: 3, right: 0))
+        reviewsCountLabel.centerXAnchor.constraint(equalTo: ratingImageView.centerXAnchor)
+        
+        categoriesLabel.anchor(top: addressLabel.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: margins.bottomAnchor, trailing: nil, padding: .init(top: 2, left: 8, bottom: 0, right: 0))
+        
+        distanceLabel.anchor(top: margins.topAnchor, leading: nameLabel.trailingAnchor, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 8, left: 16, bottom: 0, right: 4))
+//        distanceLabel.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor)
+        
+        priceLabel.anchor(top: distanceLabel.bottomAnchor, leading: nil, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 4))
     }
     
     override func awakeFromNib() {
@@ -194,8 +128,35 @@ class BusinessCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
     }
     
 }
+
+
+extension UIView {
+    func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let top = top {
+            topAnchor.constraint(equalTo: top, constant: padding.top).isActive = true
+        }
+        if let leading = leading {
+            leadingAnchor.constraint(equalTo: leading, constant: padding.left).isActive = true
+        }
+        if let bottom = bottom {
+            bottomAnchor.constraint(equalTo: bottom, constant: -padding.bottom).isActive = true
+        }
+        if let trailing = trailing {
+            trailingAnchor.constraint(equalTo: trailing, constant: -padding.right).isActive = true
+        }
+        if size.width != 0 {
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        }
+        if size.height != 0 {
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        }
+    }
+    
+}
+
+
+

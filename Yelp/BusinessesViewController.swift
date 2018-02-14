@@ -8,7 +8,8 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate,
+    UIScrollViewDelegate
 {
     
     var businesses: [Business]!
@@ -64,6 +65,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 120
+        tableView.anchor(top: self.view.topAnchor, leading: self.view.leadingAnchor, bottom: self.view.bottomAnchor, trailing: self.view.trailingAnchor)
         
 //        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
 //            self.businesses = businesses
@@ -71,7 +73,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 //            self.tableView.reloadData()
 //        }
 //        )
-        Business.searchWithTerm(term: "Restaurants", sort: .distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: Error!) -> Void in
+        Business.searchWithTerm(term: "Food", sort: .distance, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
             self.businesses = businesses
             self.filteredData = businesses
             self.tableView.reloadData()
@@ -108,6 +110,28 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                 self.tableView.reloadData()
             }
             )
+        }
+    }
+    var isMoreDataLoading = false
+    @objc func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if !isMoreDataLoading {
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                self.isMoreDataLoading = true
+                loadMoreData()
+            }
+        }
+    }
+    
+    func loadMoreData() {
+        Business.searchWithTerm(term: "Food", sort: .distance, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
+            self.businesses = businesses
+            self.filteredData = businesses
+            self.tableView.reloadData()
+            self.isMoreDataLoading = false
         }
     }
     
