@@ -17,7 +17,6 @@ class BusinessCell: UITableViewCell {
         label.textColor = UIColor.black
         label.font = label.font.withSize(15)
         label.font = UIFont.boldSystemFont(ofSize: label.font.pointSize)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -25,7 +24,6 @@ class BusinessCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = label.font.withSize(13)
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.lightGray
         return label
     }()
@@ -33,14 +31,12 @@ class BusinessCell: UITableViewCell {
     let addressLabel: UILabel = {
         let label = UILabel()
         label.font = label.font.withSize(13)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let categoriesLabel: UILabel = {
         let label = UILabel()
         label.font = label.font.withSize(13)
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.lightGray
         return label
     }()
@@ -49,7 +45,6 @@ class BusinessCell: UITableViewCell {
         let label = UILabel()
         label.font = label.font.withSize(13)
         label.textColor = UIColor.lightGray
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -57,7 +52,6 @@ class BusinessCell: UITableViewCell {
         let label = UILabel()
         label.font = label.font.withSize(13)
         label.textColor = UIColor.lightGray
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -115,7 +109,13 @@ class BusinessCell: UITableViewCell {
         setConstraints(priceLabel, leadingAnchor: nil, leadingConstant: 0, topAnchor: distanceLabel.bottomAnchor, topConstant: 8, trailingAnchor: margins.trailingAnchor, trailingConstant: 4, bottomAnchor: nil, bottomConstant: 0, widthConstant: 0, heightConstant: 0)
     }
     
-    func setConstraints(_ view: UIView, leadingAnchor: NSLayoutXAxisAnchor? = nil, leadingConstant: CGFloat = 0, topAnchor: NSLayoutYAxisAnchor? = nil, topConstant: CGFloat, trailingAnchor: NSLayoutXAxisAnchor? = nil, trailingConstant: CGFloat = 0, bottomAnchor: NSLayoutYAxisAnchor? = nil, bottomConstant: CGFloat = 0, widthConstant: CGFloat = 0, heightConstant: CGFloat = 0) {
+    func setConstraints(_ view: UIView, leadingAnchor: NSLayoutXAxisAnchor? = nil,
+                        leadingConstant: CGFloat = 0, topAnchor: NSLayoutYAxisAnchor? = nil,
+                        topConstant: CGFloat, trailingAnchor: NSLayoutXAxisAnchor? = nil,
+                        trailingConstant: CGFloat = 0, bottomAnchor: NSLayoutYAxisAnchor? = nil,
+                        bottomConstant: CGFloat = 0, widthConstant: CGFloat = 0,
+                        heightConstant: CGFloat = 0) {
+        
         contentView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         

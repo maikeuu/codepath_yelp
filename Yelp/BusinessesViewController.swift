@@ -25,15 +25,14 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
         let tableWidth: CGFloat = self.view.frame.width
         let tableHeight: CGFloat = self.view.frame.height
-        
         tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: tableWidth, height: tableHeight - barHeight))
         tableView.register(BusinessCell.self, forCellReuseIdentifier: "BusinessCell")
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)
         
-        tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 120
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
@@ -71,9 +70,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 105
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 105
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
