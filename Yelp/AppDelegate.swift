@@ -15,7 +15,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        //initalize UI Window and set BusinessesViewController as the rootViewController
+        window = UIWindow()
+        window?.makeKeyAndVisible()
+        window?.rootViewController = BusinessesViewController()
+        window?.backgroundColor = UIColor.white
+        
+        //create a navigation bar controller on top of the FlixMainViewController
+        //Set the rootViewController to be the navController now
+        let navController = UINavigationController(rootViewController: BusinessesViewController())
+        window?.rootViewController = navController
+        
         return true
     }
 

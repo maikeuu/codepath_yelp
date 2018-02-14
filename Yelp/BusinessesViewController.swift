@@ -8,17 +8,30 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
+{
     
     var businesses: [Business]!
     
-    @IBOutlet weak var tableView: UITableView!
+    var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //initialize navigation bar's attributes
+        navigationItem.title = "Yelp"
+        
+        //initialize tableView onto view
+        let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
+        let tableWidth: CGFloat = self.view.frame.width
+        let tableHeight: CGFloat = self.view.frame.height
+        
+        tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: tableWidth, height: tableHeight - barHeight))
+        tableView.register(BusinessCell.self, forCellReuseIdentifier: "BusinessCell")
         tableView.delegate = self
         tableView.dataSource = self
+        self.view.addSubview(tableView)
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 120
         
@@ -26,12 +39,12 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             
             self.businesses = businesses
             self.tableView.reloadData()
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
+//            if let businesses = businesses {
+//                for business in businesses {
+//                    print(business.name!)
+//                    print(business.address!)
+//                }
+//            }
         }
         )
         /* Example of Yelp search with more search options specified
@@ -51,26 +64,19 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             return businesses!.count
         } else {return 0}
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
         cell.business = businesses[indexPath.row]
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 105
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
