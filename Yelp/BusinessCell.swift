@@ -72,8 +72,10 @@ class BusinessCell: UITableViewCell {
             nameLabel.text = "\(cellRow!). " + business.name!
             reviewsCountLabel.text = "\(business.reviewCount!) Reviews"
             addressLabel.text = business.address
+            if business.imageURL != nil {
+                thumbImageView.setImageWith(business.imageURL!)
+            }
             categoriesLabel.text = business.categories
-            thumbImageView.setImageWith(business.imageURL!)
             ratingImageView.setImageWith(business.ratingImageURL!)
             distanceLabel.text = business.distance
             priceLabel.text = "$$"

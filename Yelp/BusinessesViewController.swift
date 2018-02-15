@@ -12,9 +12,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     UIScrollViewDelegate
 {
     
-    var businesses: [Business]!
-    var tableView: UITableView!
-    var searchBar: UISearchBar!
     
     //create and initialize searchButton to be placed onto navigation bar
     let searchButton: UIButton = {
@@ -36,13 +33,28 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.tintColor = UIColor.lightGray
         return searchBar
     }()
-
     
+    var businesses: [Business]!
+    var tableView: UITableView!
+    var searchBar: UISearchBar!
     var filteredData: [Business]!
+    var currentSearch: String = "Food"
+    var isMoreDataLoading = false
+    var loadingMoreView: InfiniteScrollActivityView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setUpView()
+        //initialize a search on start up
+        Business.searchWithTerm(term: "Food", completion: { (businesses: [Business]?, error: Error?) -> Void in
+            self.businesses = businesses
+            self.filteredData = businesses
+            self.tableView.reloadData()
+        }
+        )
+    }
+    
+    func setUpView() {
         //initialize the button to be used to search for new inquirys
         searchButton.addTarget(self, action: #selector(self.buttonClicked), for: .touchUpInside)
         let searchBarButton = UIBarButtonItem(customView: searchButton)
@@ -67,17 +79,14 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.estimatedRowHeight = 120
         tableView.anchor(top: self.view.topAnchor, leading: self.view.leadingAnchor, bottom: self.view.bottomAnchor, trailing: self.view.trailingAnchor)
         
-//        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
-//            self.businesses = businesses
-//            self.filteredData = businesses
-//            self.tableView.reloadData()
-//        }
-//        )
-        Business.searchWithTerm(term: "Food", sort: .distance, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
-            self.businesses = businesses
-            self.filteredData = businesses
-            self.tableView.reloadData()
-         }
+        //initialize infiniteScrollActivityView
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        var insets = tableView.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        tableView.contentInset = insets
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -104,7 +113,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     @objc func buttonClicked(_ sender: UIButton?) {
         if navSearchBar.text != "" {
-            Business.searchWithTerm(term: navSearchBar.text!, completion: { (businesses: [Business]?, error: Error?) -> Void in
+            self.currentSearch = navSearchBar.text!
+            Business.searchWithTerm(term: currentSearch, completion: { (businesses: [Business]?, error: Error?) -> Void in
                 self.businesses = businesses
                 self.filteredData = businesses
                 self.tableView.reloadData()
@@ -112,24 +122,29 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             )
         }
     }
-    var isMoreDataLoading = false
     @objc func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !isMoreDataLoading {
             let scrollViewContentHeight = tableView.contentSize.height
             let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
-            
+            let buffer: CGFloat = 240
             // When the user has scrolled past the threshold, start requesting
-            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+            if(scrollView.contentOffset.y > (scrollOffsetThreshold - buffer) && tableView.isDragging) {
                 self.isMoreDataLoading = true
+                //infiniteScrollActivity
+                let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView!.startAnimating()
                 loadMoreData()
             }
         }
     }
     
     func loadMoreData() {
-        Business.searchWithTerm(term: "Food", sort: .distance, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
-            self.businesses = businesses
-            self.filteredData = businesses
+        Business.searchWithTerm(term: self.currentSearch, sort: nil, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
+            self.businesses.append(contentsOf: businesses)
+            self.filteredData = self.businesses
+            //infiniteScrollActivity
+            self.loadingMoreView!.stopAnimating()
             self.tableView.reloadData()
             self.isMoreDataLoading = false
         }
@@ -137,6 +152,5 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
