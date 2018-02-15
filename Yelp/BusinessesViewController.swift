@@ -7,11 +7,33 @@
 //
 
 import UIKit
+import MapKit
 
 class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate,
     UIScrollViewDelegate
 {
+    //Class Properties
+    var businesses: [Business]!
+    var filteredData: [Business]!
+    var currentSearch: String = "Food"
+    var isMoreDataLoading = false
+    var tableView: UITableView!
+    var searchBar: UISearchBar!
+    var mapViewController: UIViewController?
+    var loadingMoreView: InfiniteScrollActivityView?
     
+    //create and initialize mapButton to be placed onto navigation bar
+    let mapButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Map", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.contentEdgeInsets = UIEdgeInsetsMake(8, 12, 8, 12) //top, left, bottom, right
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 3
+        button.clipsToBounds = true
+        button.layer.borderColor = UIColor.white.cgColor
+        return button
+    }()
     
     //create and initialize searchButton to be placed onto navigation bar
     let searchButton: UIButton = {
@@ -34,14 +56,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         return searchBar
     }()
     
-    var businesses: [Business]!
-    var tableView: UITableView!
-    var searchBar: UISearchBar!
-    var filteredData: [Business]!
-    var currentSearch: String = "Food"
-    var isMoreDataLoading = false
-    var loadingMoreView: InfiniteScrollActivityView?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -54,14 +68,19 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         )
     }
     
-    func setUpView() {
+    private func setUpView() {
         //initialize the button to be used to search for new inquirys
-        searchButton.addTarget(self, action: #selector(self.buttonClicked), for: .touchUpInside)
+        searchButton.addTarget(self, action: #selector(self.searchButtonClicked), for: .touchUpInside)
         let searchBarButton = UIBarButtonItem(customView: searchButton)
+        
+        //initialize map button
+        mapButton.addTarget(self, action: #selector(self.mapButtonClicked), for: .touchUpInside)
+        let mapBarButton = UIBarButtonItem(customView: mapButton)
         
         //initialize navigation bar and searchBar properties
         navSearchBar.delegate = self
-        navigationItem.rightBarButtonItem = searchBarButton
+        navigationItem.leftBarButtonItem = searchBarButton
+        navigationItem.rightBarButtonItem = mapBarButton
         navigationItem.titleView = navSearchBar
         navigationController?.navigationBar.barTintColor = UIColor(red: 0.82, green: 0.13, blue: 0.13, alpha: 1.0)
         
@@ -111,7 +130,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.reloadData()
     }
     
-    @objc func buttonClicked(_ sender: UIButton?) {
+    @objc func searchButtonClicked(_ sender: UIButton?) {
         if navSearchBar.text != "" {
             self.currentSearch = navSearchBar.text!
             Business.searchWithTerm(term: currentSearch, completion: { (businesses: [Business]?, error: Error?) -> Void in
@@ -122,6 +141,12 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             )
         }
     }
+    
+    @objc func mapButtonClicked(_ sender: UIButton?) {
+        mapViewController = MapViewController()
+        present(mapViewController!, animated: true, completion: nil)
+    }
+    
     @objc func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !isMoreDataLoading {
             let scrollViewContentHeight = tableView.contentSize.height

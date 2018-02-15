@@ -9,6 +9,7 @@
 import UIKit
 
 class BusinessCell: UITableViewCell {
+    
     //UI Properties
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -65,6 +66,7 @@ class BusinessCell: UITableViewCell {
         return imageView
     }()
     
+    //used to calculate row number of cell
     var cellRow: Int?
     
     var business: Business! {
@@ -72,6 +74,8 @@ class BusinessCell: UITableViewCell {
             nameLabel.text = "\(cellRow!). " + business.name!
             reviewsCountLabel.text = "\(business.reviewCount!) Reviews"
             addressLabel.text = business.address
+            //done in the case that network is too slow to retrieve pictures
+            //will find better fix in the future
             if business.imageURL != nil {
                 thumbImageView.setImageWith(business.imageURL!)
             }
@@ -157,7 +161,6 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: size.height).isActive = true
         }
     }
-    
 }
 
 
