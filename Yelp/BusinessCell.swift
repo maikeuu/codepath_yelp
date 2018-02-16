@@ -103,41 +103,34 @@ class BusinessCell: UITableViewCell {
         let margins = contentView.layoutMarginsGuide
         thumbImageView.anchor(top: margins.topAnchor, leading: margins.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 8, left: 4, bottom: 0, right: 0), size: .init(width: 65, height: 65))
         
-        nameLabel.anchor(top: margins.topAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 8, left: 8, bottom: 0, right: 0))
         nameLabel.numberOfLines = 0
+        nameLabel.anchor(top: margins.topAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: distanceLabel.leadingAnchor, padding: .init(top: 8, left: 8, bottom: 0, right: 12))
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         
         ratingImageView.anchor(top: nameLabel.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 8, bottom: 0, right: 0), size: .init(width: 83, height: 15))
         
         addressLabel.anchor(top: ratingImageView.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 8, bottom: 0, right: 0))
         
-        reviewsCountLabel.anchor(top: nil, leading: ratingImageView.trailingAnchor, bottom: addressLabel.topAnchor, trailing: nil, padding: .init(top: 0, left: 15, bottom: 3, right: 0))
+        reviewsCountLabel.anchor(top: nil, leading: ratingImageView.trailingAnchor, bottom: addressLabel.topAnchor, trailing: nil, padding: .init(top: 0, left: 8, bottom: 3, right: 0))
         reviewsCountLabel.centerXAnchor.constraint(equalTo: ratingImageView.centerXAnchor)
         
-        categoriesLabel.anchor(top: addressLabel.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: margins.bottomAnchor, trailing: nil, padding: .init(top: 2, left: 8, bottom: 0, right: 0))
+        categoriesLabel.anchor(top: addressLabel.bottomAnchor, leading: thumbImageView.trailingAnchor, bottom: margins.bottomAnchor, trailing: margins.trailingAnchor, padding: .init(top: 2, left: 8, bottom: 2, right: 4))
+        categoriesLabel.numberOfLines = 0
         
-        distanceLabel.anchor(top: margins.topAnchor, leading: nameLabel.trailingAnchor, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 8, left: 16, bottom: 0, right: 4))
-//        distanceLabel.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor)
+        distanceLabel.anchor(top: margins.topAnchor, leading: nil, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 4))
+        distanceLabel.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor)
+        distanceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        distanceLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
-        priceLabel.anchor(top: distanceLabel.bottomAnchor, leading: nil, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 4))
+        priceLabel.anchor(top: distanceLabel.bottomAnchor, leading: nil, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 0, right: 4))
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
 }
-
 
 extension UIView {
     func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) {
@@ -162,6 +155,7 @@ extension UIView {
         }
     }
 }
+
 
 
 

@@ -8,26 +8,70 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
-class MapViewController: BusinessesViewController {
+class MapViewController: BaseViewController, CLLocationManagerDelegate {
 
-    
     var mapView = MKMapView()
+    var businesses: [Business]!
+    var locationManager = CLLocationManager()
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        mapView = MKMapView()
+        mapView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        mapView.showsUserLocation = true
+        view.addSubview(mapView)
+        //37.785771,-122.406165
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.blue
+        listButton.addTarget(self, action: #selector(self.listButtonClicked), for: .touchUpInside)
+        locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+            locationManager.distanceFilter = 200
+        } else {
+            let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
+            goToLocation(location: centerLocation)
+        }
+        for business in businesses {
+            addAnnotationAtAddress(address: business.address!, title: business.name!)
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(true)
-//
-//        mapView = MKMapView()
-//        mapView.frame = CGRect(x: 0, y: 100, width: view.frame.width, height: view.frame.height)
-//        view.addSubview(mapView)
-//        //37.785771,-122.406165
-//        let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
-//        goToLocation(location: centerLocation)
+    func addAnnotationAtAddress(address: String, title: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address){ (placemarks, error) in
+            if let placemarks = placemarks {
+                if placemarks.count != 0 {
+                    let coordinate = placemarks.first!.location
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate!.coordinate
+                    annotation.title = title
+                    self.mapView.addAnnotation(annotation)
+                }
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let span = MKCoordinateSpanMake(0.1, 0.1)
+            let region = MKCoordinateRegionMake(location.coordinate, span)
+            mapView.setRegion(region, animated: false)
+        }
     }
     
     func goToLocation(location: CLLocation) {
@@ -35,21 +79,10 @@ class MapViewController: BusinessesViewController {
         let region = MKCoordinateRegionMake(location.coordinate, span)
         mapView.setRegion(region, animated: false)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @objc func listButtonClicked(_ sender: UIButton?) {
+        self.navigationController?.popViewController(animated: false)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
