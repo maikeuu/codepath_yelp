@@ -11,10 +11,10 @@ import MapKit
 import CoreLocation
 
 class MapViewController: BaseViewController, CLLocationManagerDelegate {
-
     var mapView = MKMapView()
-    var businesses: [Business]!
     var locationManager = CLLocationManager()
+    
+    var businesses: [Business] = []
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,9 +28,8 @@ class MapViewController: BaseViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        listButton.addTarget(self, action: #selector(self.listButtonClicked), for: .touchUpInside)
-        locationManager.requestWhenInUseAuthorization()
         
+        locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
