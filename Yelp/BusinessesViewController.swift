@@ -16,14 +16,11 @@ class BusinessesViewController: BaseViewController {
     var searchBar: UISearchBar!
     var loadingMoreView: InfiniteScrollActivityView!
     
-    //Data Properties
-    var businesses, filteredData: [Business]!
-    var currentSearch = ""
     var isMoreDataLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchButton.addTarget(self, action: #selector(self.searchButtonClicked), for: .touchUpInside)
+//        searchButton.addTarget(self, action: #selector(self.searchButtonClicked), for: .touchUpInside)
         mapButton.addTarget(self, action: #selector(self.mapButtonClicked), for: .touchUpInside)
         setUpView()
         //initialize a search on start up
@@ -33,6 +30,7 @@ class BusinessesViewController: BaseViewController {
             self.tableView.reloadData()
         })
     }
+    
     
     private func setUpView() {
         //initialize tableView onto view
@@ -58,6 +56,7 @@ class BusinessesViewController: BaseViewController {
         insets.bottom += InfiniteScrollActivityView.defaultHeight
         tableView.contentInset = insets
     }
+    
     
     private func loadMoreData() {
         Business.searchWithTerm(term: currentSearch, sort: nil, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
@@ -91,18 +90,6 @@ class BusinessesViewController: BaseViewController {
         searchBar.resignFirstResponder()
     }
     
-    @objc private func searchButtonClicked(_ sender: UIButton?) {
-        if navSearchBar.text != "" {
-            self.currentSearch = navSearchBar.text!
-            Business.searchWithTerm(term: currentSearch, completion: { 
-                (businesses: [Business]?, error: Error?) -> Void in
-                self.businesses = businesses
-                self.filteredData = businesses
-                self.tableView.reloadData()
-            })
-        }
-    }
-
     @objc private func mapButtonClicked(_ sender: UIButton?) {
         let mapViewController = MapViewController()
         mapViewController.businesses = self.businesses
@@ -123,6 +110,13 @@ extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate {
         cell.cellRow = indexPath.row + 1
         cell.business = filteredData[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let destination = BusinessDetailViewController()
+        destination.business = filteredData[indexPath.row]
+        navigationController?.pushViewController(destination, animated: true)
     }
 }
 

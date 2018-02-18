@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class BaseViewController: UIViewController, UISearchBarDelegate {
     
     //create and initialize searchBar to be placed onto navigation bar
@@ -32,18 +33,9 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
         return button
     }()
     
-    //create and initialize searchButton to be placed onto navigation bar
-    let searchButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Search", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsetsMake(8, 12, 8, 12) //top, left, bottom, right
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.layer.borderColor = UIColor.white.cgColor
-        return button
-    }()
+    //Data properties
+    var businesses, filteredData: [Business]!
+    var currentSearch = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,15 +50,15 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
         
         //if current navigatigation Controller is the root
         if (self.navigationController?.viewControllers.count == 1) {
-            let searchBarButton = UIBarButtonItem(customView: searchButton)
             //initialize map button
             let mapBarButton = UIBarButtonItem(customView: mapButton)
             //initialize navigation bar and searchBar properties
-            navigationItem.leftBarButtonItem = searchBarButton
             navigationItem.rightBarButtonItem = mapBarButton
             navigationItem.titleView = navSearchBar
             
-        } else {}
+        } else {
+            navigationItem.titleView = navSearchBar
+        }
     }
     
     func rgbToColor(redVal: CGFloat, greenVal: CGFloat, blueVal: CGFloat, alphaVal: CGFloat) -> UIColor {
@@ -74,10 +66,34 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
     }
     
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 }
+
+extension UIView {
+    func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let top = top {
+            topAnchor.constraint(equalTo: top, constant: padding.top).isActive = true
+        }
+        if let leading = leading {
+            leadingAnchor.constraint(equalTo: leading, constant: padding.left).isActive = true
+        }
+        if let bottom = bottom {
+            bottomAnchor.constraint(equalTo: bottom, constant: -padding.bottom).isActive = true
+        }
+        if let trailing = trailing {
+            trailingAnchor.constraint(equalTo: trailing, constant: -padding.right).isActive = true
+        }
+        if size.width != 0 {
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        }
+        if size.height != 0 {
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        }
+    }
+}
+
 
 

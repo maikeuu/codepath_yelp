@@ -48,12 +48,13 @@ class YelpClient: BDBOAuth1RequestOperationManager {
     }
     
     var offset = 0
-    var limit = 10
+    let limit = 10
     func searchWithTerm(_ term: String, sort: YelpSortMode?, categories: [String]?, deals: Bool?, completion: @escaping ([Business]?, Error?) -> Void) -> AFHTTPRequestOperation {
         // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
         
-        // Default the location to San Francisco
-        var parameters: [String : AnyObject] = ["term": term as AnyObject, "ll": "37.785771,-122.406165" as AnyObject,
+        //Clairemont : 32.8240, -117.1849
+        //Default location to La Jolla
+        var parameters: [String : AnyObject] = ["term": term as AnyObject, "ll": "32.842674, -117.257767" as AnyObject,
                                                 "radius": 40000 as AnyObject, "limit": limit as AnyObject, "offset": offset as AnyObject]
         self.offset += 10
         if sort != nil {

@@ -15,39 +15,31 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="749" image="yelp launch screen" translatesAutoresizingMaskIntoConstraints="NO" id="AL1-U0-Pdl">
-                    <rect key="frame" x="0.0" y="54" width="375" height="518"/>
-                </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Copyright (c) 2014 Timothy Lee. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="8ie-xW-0ye">
-                    <rect key="frame" x="20" y="623" width="335" height="24"/>
+                    <rect key="frame" x="20" y="598" width="335" height="24"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                     <color key="textColor" red="1" green="0.98465777730000004" blue="0.94786617819999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView clipsSubviews="YES" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CodePath Logo" translatesAutoresizingMaskIntoConstraints="NO" id="ppg-FD-oWM">
-                    <rect key="frame" x="34" y="396" width="306" height="56"/>
-                    <color key="backgroundColor" red="0.98846919893876928" green="0.93864774213650326" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconmonstr-fast-food-7-240" translatesAutoresizingMaskIntoConstraints="NO" id="syC-9d-Nvl">
+                    <rect key="frame" x="67" y="164" width="240" height="240"/>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.85211193561553955" green="0.19810283184051514" blue="0.1789456307888031" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.14423808455467224" green="0.57430422306060791" blue="0.57058805227279663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="ppg-FD-oWM" secondAttribute="trailing" constant="35" id="HJo-w6-vF2"/>
-                <constraint firstAttribute="bottom" secondItem="8ie-xW-0ye" secondAttribute="bottom" constant="20" id="Kzo-t9-V3l"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="8ie-xW-0ye" secondAttribute="bottom" constant="20" id="Kzo-t9-V3l"/>
                 <constraint firstItem="8ie-xW-0ye" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" symbolic="YES" id="MfP-vx-nX0"/>
-                <constraint firstItem="AL1-U0-Pdl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Prb-jr-EPS"/>
-                <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="ppg-FD-oWM" secondAttribute="bottom" constant="171" id="SVE-Aw-s1I"/>
-                <constraint firstItem="ppg-FD-oWM" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="34" id="Tz8-Zr-W4r"/>
+                <constraint firstItem="syC-9d-Nvl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="67" id="O5U-tW-bz1"/>
                 <constraint firstAttribute="centerX" secondItem="8ie-xW-0ye" secondAttribute="centerX" id="ZEH-qu-HZ9"/>
-                <constraint firstAttribute="trailing" secondItem="AL1-U0-Pdl" secondAttribute="trailing" id="bwU-2d-ugd"/>
-                <constraint firstItem="AL1-U0-Pdl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="54" id="eHM-0g-6za"/>
-                <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="AL1-U0-Pdl" secondAttribute="bottom" constant="51" id="pQG-Dg-KPT"/>
+                <constraint firstItem="syC-9d-Nvl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="164" id="tBV-k9-LRc"/>
+                <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="syC-9d-Nvl" secondAttribute="bottom" constant="194" id="tLS-Eh-Kej"/>
+                <constraint firstAttribute="trailing" secondItem="syC-9d-Nvl" secondAttribute="trailing" constant="68" id="vAk-ct-Tky"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="547.5" y="666.5"/>
         </view>
     </objects>
     <resources>
-        <image name="CodePath Logo" width="272" height="56"/>
-        <image name="yelp launch screen" width="576" height="1024"/>
+        <image name="iconmonstr-fast-food-7-240" width="240" height="240"/>
     </resources>
 </document>

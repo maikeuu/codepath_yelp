@@ -14,7 +14,7 @@ class MapViewController: BaseViewController, CLLocationManagerDelegate {
     var mapView = MKMapView()
     var locationManager = CLLocationManager()
     
-    var businesses: [Business] = []
+//    var businesses: [Business] = []
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,9 +39,7 @@ class MapViewController: BaseViewController, CLLocationManagerDelegate {
             let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
             goToLocation(location: centerLocation)
         }
-        for business in businesses {
-            addAnnotationAtAddress(address: business.address!, title: business.name!)
-        }
+        addAnnotations()
     }
     
     func addAnnotationAtAddress(address: String, title: String) {
@@ -56,6 +54,13 @@ class MapViewController: BaseViewController, CLLocationManagerDelegate {
                     self.mapView.addAnnotation(annotation)
                 }
             }
+        }
+    }
+    
+    
+    func addAnnotations() {
+        for business in self.businesses {
+            addAnnotationAtAddress(address: business.address!, title: business.name!)
         }
     }
     
