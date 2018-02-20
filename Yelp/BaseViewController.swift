@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+import MapKit
+import CoreLocation
 
 class BaseViewController: UIViewController, UISearchBarDelegate {
     
@@ -36,6 +37,10 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
     //Data properties
     var businesses, filteredData: [Business]!
     var currentSearch = ""
+    
+    //Properties for Map View
+    var mapView = MKMapView()
+    var locationManager = CLLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,6 +98,51 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: size.height).isActive = true
         }
     }
+}
+
+extension BaseViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let span = MKCoordinateSpanMake(0.1, 0.1)
+            let region = MKCoordinateRegionMake(location.coordinate, span)
+            mapView.setRegion(region, animated: false)
+        }
+    }
+    
+    func goToLocation(location: CLLocation) {
+        let span = MKCoordinateSpanMake(0.1, 0.1)
+        let region = MKCoordinateRegionMake(location.coordinate, span)
+        mapView.setRegion(region, animated: false)
+    }
+    
+    func addAnnotationAtAddress(address: String, title: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address){ (placemarks, error) in
+            if let placemarks = placemarks {
+                if placemarks.count != 0 {
+                    let coordinate = placemarks.first!.location
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate!.coordinate
+                    annotation.title = title
+                    self.mapView.addAnnotation(annotation)
+                }
+            }
+        }
+    }
+    
+    func addAnnotations() {
+        for business in self.businesses {
+            addAnnotationAtAddress(address: business.address!, title: business.name!)
+        }
+    }
+    
 }
 
 

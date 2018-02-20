@@ -12,33 +12,29 @@ import CoreLocation
 
 class BusinessDetailViewController: BaseViewController {
     
-    var mapView = MKMapView()
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
         label.font = label.font.withSize(25)
         return label
     }()
     
     let reviewsCountLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
         label.font = label.font.withSize(11)
-        label.textColor = UIColor.black
         return label
     }()
     
     let addressLabel: UILabel = {
         let label = UILabel()
-        label.font = label.font.withSize(13)
+        label.font = label.font.withSize(15)
+        label.backgroundColor = .white
         return label
     }()
     
     let categoriesLabel: UILabel = {
         let label = UILabel()
         label.font = label.font.withSize(11)
-        label.textColor = UIColor.black
         return label
     }()
     
@@ -104,35 +100,41 @@ class BusinessDetailViewController: BaseViewController {
         
         priceLabel.anchor(top: distanceLabel.bottomAnchor, leading: nil, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 2, left: 0, bottom: 0, right: 0))
         
+        mapView.anchor(top: categoriesLabel.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 4, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 150))
+        
+        addressLabel.anchor(top: mapView.bottomAnchor, leading: margins.leadingAnchor, bottom: nil, trailing: margins.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
-        mapView = MKMapView()
-        mapView.showsUserLocation = true
-        view.addSubview(mapView)
-        
-        mapView.anchor(top: categoriesLabel.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 25, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 150))
-        
-        addAnnotationAtAddress(address: business.address!, title: business.name!)
-        
-        
+        [nameLabel, reviewsCountLabel, addressLabel, categoriesLabel, thumbImageView, ratingImageView,
+         distanceLabel, priceLabel].forEach{view.addSubview($0)}
+        initalizeMap()
+        setUpView()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.titleView = nil
-        view.backgroundColor = .white
-        
-        [nameLabel, reviewsCountLabel, addressLabel, categoriesLabel, thumbImageView, ratingImageView,
-         distanceLabel, priceLabel].forEach{view.addSubview($0)}
-         setUpView()
-        
+        view.backgroundColor = UIColor.white
     }
     
-    func addAnnotationAtAddress(address: String, title: String) {
+    private func initalizeMap() {
+        self.mapView = MKMapView()
+        mapView.showsUserLocation = true
+        view.addSubview(mapView)
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+            locationManager.distanceFilter = 200
+        }
+        findAddress(address: business.address!, title: business.name!)
+    }
+    
+    
+    private func findAddress(address: String, title: String) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address){ (placemarks, error) in
             if let placemarks = placemarks {
@@ -142,14 +144,9 @@ class BusinessDetailViewController: BaseViewController {
                     annotation.coordinate = coordinate!.coordinate
                     annotation.title = title
                     self.mapView.addAnnotation(annotation)
+                    self.goToLocation(location: coordinate!)
                 }
             }
         }
-    }
-
-    func goToLocation(location: CLLocation) {
-        let span = MKCoordinateSpanMake(0.1, 0.1)
-        let region = MKCoordinateRegionMake(location.coordinate, span)
-        mapView.setRegion(region, animated: false)
     }
 }

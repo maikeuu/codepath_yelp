@@ -2,7 +2,7 @@
 
 **Yelp** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **X** hours spent in total
+Time spent: **16** hours spent in total
 
 ## User Stories
 
@@ -16,7 +16,7 @@ The following **stretch** features are implemented:
 
 - [x ] Infinite scroll for restaurant results. (+3pt)
 - [x ] Implement map view of restaurant results. (+3pt)
-- [ ] Implement the restaurant detail page. (+2pt)
+- [x] Implement the restaurant detail page. (+2pt)
 
 The following **additional** features are implemented:
 
@@ -24,20 +24,20 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. How did everyone personalize Yelp?
+2. How did everyone organize their code using MVC?
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<https://imgur.com/a/DACuC.gif/>
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Figuring out how to organize my code MVC, since I feel like sometimes there's no line between view or controller. Like for example, the restaurant detail view page. If it's just a page full of information, do I make it a UIView or a UIViewController? 
 
 ## License
 
