@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MapKit
+import CoreLocation
 
 class BaseViewController: UIViewController, UISearchBarDelegate {
     
@@ -32,30 +34,13 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
         return button
     }()
     
-    //create and initialize searchButton to be placed onto navigation bar
-    let searchButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Search", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsetsMake(8, 12, 8, 12) //top, left, bottom, right
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.layer.borderColor = UIColor.white.cgColor
-        return button
-    }()
+    //Data properties
+    var businesses, filteredData: [Business]!
+    var currentSearch = ""
     
-    let listButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("List", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsetsMake(8, 12, 8, 12) //top, left, bottom, right
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.layer.borderColor = UIColor.white.cgColor
-        return button
-    }()
+    //Properties for Map View
+    var mapView = MKMapView()
+    var locationManager = CLLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,28 +50,100 @@ class BaseViewController: UIViewController, UISearchBarDelegate {
     func setUpNavigationBar() {
         navSearchBar.delegate = self
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.82, green: 0.13, blue: 0.13, alpha: 1.0)
+        navigationController?.navigationBar.barTintColor = rgbToColor(redVal: 0, greenVal: 128, blueVal: 128, alphaVal: 1)
         navigationController?.navigationBar.tintColor = UIColor.white
         
         //if current navigatigation Controller is the root
         if (self.navigationController?.viewControllers.count == 1) {
-            let searchBarButton = UIBarButtonItem(customView: searchButton)
             //initialize map button
             let mapBarButton = UIBarButtonItem(customView: mapButton)
             //initialize navigation bar and searchBar properties
-            navigationItem.leftBarButtonItem = searchBarButton
             navigationItem.rightBarButtonItem = mapBarButton
             navigationItem.titleView = navSearchBar
             
         } else {
-            //TODO: figure out how to customize navigation bar in other controllers
+            navigationItem.titleView = navSearchBar
         }
-        
     }
+    
+    func rgbToColor(redVal: CGFloat, greenVal: CGFloat, blueVal: CGFloat, alphaVal: CGFloat) -> UIColor {
+        return UIColor(red: redVal/255, green: greenVal/255, blue: blueVal/255, alpha: alphaVal)
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
+
+extension UIView {
+    func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let top = top {
+            topAnchor.constraint(equalTo: top, constant: padding.top).isActive = true
+        }
+        if let leading = leading {
+            leadingAnchor.constraint(equalTo: leading, constant: padding.left).isActive = true
+        }
+        if let bottom = bottom {
+            bottomAnchor.constraint(equalTo: bottom, constant: -padding.bottom).isActive = true
+        }
+        if let trailing = trailing {
+            trailingAnchor.constraint(equalTo: trailing, constant: -padding.right).isActive = true
+        }
+        if size.width != 0 {
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        }
+        if size.height != 0 {
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        }
+    }
+}
+
+extension BaseViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let span = MKCoordinateSpanMake(0.1, 0.1)
+            let region = MKCoordinateRegionMake(location.coordinate, span)
+            mapView.setRegion(region, animated: false)
+        }
+    }
+    
+    func goToLocation(location: CLLocation) {
+        let span = MKCoordinateSpanMake(0.1, 0.1)
+        let region = MKCoordinateRegionMake(location.coordinate, span)
+        mapView.setRegion(region, animated: false)
+    }
+    
+    func addAnnotationAtAddress(address: String, title: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address){ (placemarks, error) in
+            if let placemarks = placemarks {
+                if placemarks.count != 0 {
+                    let coordinate = placemarks.first!.location
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate!.coordinate
+                    annotation.title = title
+                    self.mapView.addAnnotation(annotation)
+                }
+            }
+        }
+    }
+    
+    func addAnnotations() {
+        for business in self.businesses {
+            addAnnotationAtAddress(address: business.address!, title: business.name!)
+        }
+    }
+    
+}
+
 
 

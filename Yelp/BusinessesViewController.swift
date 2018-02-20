@@ -14,18 +14,13 @@ class BusinessesViewController: BaseViewController {
     //UIKit Properties
     var tableView: UITableView!
     var searchBar: UISearchBar!
-    
-    //Data Properties
-    var businesses: [Business]!
-    var filteredData: [Business]!
-    var currentSearch = "Food"
-    var isMoreDataLoading = false
     var loadingMoreView: InfiniteScrollActivityView!
     
+    var isMoreDataLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchButton.addTarget(self, action: #selector(self.searchButtonClicked), for: .touchUpInside)
+//        searchButton.addTarget(self, action: #selector(self.searchButtonClicked), for: .touchUpInside)
         mapButton.addTarget(self, action: #selector(self.mapButtonClicked), for: .touchUpInside)
         setUpView()
         //initialize a search on start up
@@ -62,7 +57,8 @@ class BusinessesViewController: BaseViewController {
         tableView.contentInset = insets
     }
     
-    func loadMoreData() {
+    
+    private func loadMoreData() {
         Business.searchWithTerm(term: currentSearch, sort: nil, categories: [], deals: false) { (businesses: [Business]!, error: Error!) -> Void in
             self.businesses.append(contentsOf: businesses)
             self.filteredData = self.businesses
@@ -73,7 +69,7 @@ class BusinessesViewController: BaseViewController {
         }
     }
    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    private func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredData = searchText.isEmpty ? businesses : businesses.filter {  (item: Business) -> Bool in
             //If dataItem matches the searchText, return true to include it
             return item.name!.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
@@ -81,7 +77,7 @@ class BusinessesViewController: BaseViewController {
         tableView.reloadData()
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    private func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if navSearchBar.text != "" {
             self.currentSearch = navSearchBar.text!
             Business.searchWithTerm(term: currentSearch, completion: {
@@ -94,23 +90,10 @@ class BusinessesViewController: BaseViewController {
         searchBar.resignFirstResponder()
     }
     
-    @objc func searchButtonClicked(_ sender: UIButton?) {
-        if navSearchBar.text != "" {
-            self.currentSearch = navSearchBar.text!
-            Business.searchWithTerm(term: currentSearch, completion: { 
-                (businesses: [Business]?, error: Error?) -> Void in
-                self.businesses = businesses
-                self.filteredData = businesses
-                self.tableView.reloadData()
-            })
-        }
-    }
-
-    @objc func mapButtonClicked(_ sender: UIButton?) {
+    @objc private func mapButtonClicked(_ sender: UIButton?) {
         let mapViewController = MapViewController()
         mapViewController.businesses = self.businesses
         self.navigationController?.pushViewController(mapViewController, animated: true)
-        
     }
 }
 
@@ -127,6 +110,13 @@ extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate {
         cell.cellRow = indexPath.row + 1
         cell.business = filteredData[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let destination = BusinessDetailViewController()
+        destination.business = filteredData[indexPath.row]
+        navigationController?.pushViewController(destination, animated: true)
     }
 }
 
