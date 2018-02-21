@@ -80,6 +80,7 @@ class Business: NSObject {
         for dictionary in array {
             let business = Business(dictionary: dictionary)
             businesses.append(business)
+            print(dictionary)
         }
         return businesses
     }
